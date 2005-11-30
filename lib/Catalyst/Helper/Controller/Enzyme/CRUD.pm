@@ -113,14 +113,13 @@ Catalyst Enzyme Controller with CRUD support.
 
 =head1 METHODS
 
-=head2 begin
+=head2 model_class
 
-Set up the default model and class for this Controller
+Define the  model class for this Controller
 
 =cut
-sub begin : Private {
-    my ($self, $c) = @_;
-    $self->set_model_class($c, "[% model %]");
+sub model_class {
+    return("[% model %]");
 }
 
 

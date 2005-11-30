@@ -25,30 +25,13 @@ See L<Catalyst::Enzyme>
 
 =head2 model_class
 
-The model class, set by you by calling set_model_class in the private
-C<begin> action in each Controller class.
+The model class, overloaded by you in each controller class to return
+the actual class name for the Model this controller should handle.
 
 =cut
-__PACKAGE__->mk_accessors('model_class');
-
-
-
-
-=head1 METHODS
-
-=head2 new()
-
-Create new Controller.
-
-=cut
-sub new {
-    my $self = shift->NEXT::new(@_);
-    
-    return($self);
+sub model_class {
+    return("");
 }
-
-
-
 
 
 =head1 METHODS - ACTIONS
@@ -63,14 +46,16 @@ way that you could use (or not, you may have a better way) in your own
 actions.
 
 
-=head2 begin
+=head2 auto
 
 Set up the default model and class for this Controller
 
-This is one of the few methods that you probably always want to
-define.
-
 =cut
+sub auto : Private {
+    my ($self, $c) = @_;
+    $self->set_model_class($c);
+    return(1);
+}
 
 
 
@@ -217,6 +202,7 @@ sub default_dfv {
     return({
         optional => [ $self->model_class->columns ],
         msgs => { format => '%s' },
+        missing_optional_valid => 1,
     });
 }
 
@@ -246,12 +232,13 @@ sub run_safe {
 
 
 
-=head2 set_model_class($c, $model_class_name)
+=head2 set_model_class($c)
 
-Set the Model class for the Controller.
+Set the Model class and it's configuration for the Controller using
+the model_class().
 
-Set $self->model_class, and point $self->crud_config to the Model's
-config->{crud}. Set crud_config keys:
+Point $self->crud_config to the Model's config->{crud}. Set
+crud_config keys:
 
  model_class
  model
@@ -263,9 +250,11 @@ Return 1.
 
 =cut
 sub set_model_class {
-    my ($self, $c, $model_class_name) = @_;
+    my ($self, $c) = @_;
+    my $model_class_name = $self->model_class;
 
-    $self->model_class($model_class_name);
+    #todo: move this to the model base class?
+    
     my $crud_config = $self->crud_config;
     $crud_config->{model_class} = $model_class_name;
     
@@ -293,7 +282,7 @@ config->{crud} (so model_class needs to be set).
 sub crud_config {
     my ($self) = @_;
 
-    my $model_class = $self->model_class or confess("No model_class defined in (" . ref($self) . '). Make sure you call "$self->set_model_class($c, "YOUR_MODEL_CLASS");" in the "begin" action' . "\n");
+    my $model_class = $self->model_class or confess("No model_class defined in (" . ref($self) . '). Make sure you define a model class in the "sub model_class" method' . "\n");
 
     $self->model_class->config->{crud} ||= {};  #Default to empty crud config
     my $crud_config = $self->model_class->config->{crud};

@@ -36,6 +36,7 @@ __PACKAGE__->config(
                 url => FV_URI(),
                 email => Data::FormValidator::Constraints::email(),
             },
+            missing_optional_valid => 1,
             msgs => {
                 format => '%s',
                 constraints => {

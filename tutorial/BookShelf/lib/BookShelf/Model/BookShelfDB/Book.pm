@@ -38,8 +38,9 @@ __PACKAGE__->config(
             optional => [ __PACKAGE__->columns ],
             required => [ qw/ title format genre /],
             constraint_methods => {
-                isbn => { name => "fv_isbn", constraint => qr/^[\d-]$/ },
+                isbn => { name => "fv_isbn", constraint => qr/^[\d-]+$/ },
             },
+            missing_optional_valid => 1,
             msgs => {
                 format => '%s',
                 constraints => {
