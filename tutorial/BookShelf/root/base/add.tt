@@ -1,0 +1,22 @@
+[% INCLUDE 'header.tt' %]
+[% PROCESS 'form_macros.tt' %]
+        
+<div id="title">Add new [% crud.moniker %]</div>
+
+<form action="[% c.uri_for('do_add') %]" method="post"><fieldset>
+<legend>Add a new [% crud.moniker %]</legend>
+
+    [%
+    FOR column = crud.model.columns;
+        NEXT IF column == crud.model.primary_column;
+        form_add_column_input('do_add', column, crud.column_monikers.$column);
+    END;
+    %]
+    <input type="submit" value="Add"/>
+
+</fieldset><form/>
+
+<br />
+<a href="[% c.uri_for('list') %]">List</a>
+
+[% INCLUDE 'footer.tt' %]

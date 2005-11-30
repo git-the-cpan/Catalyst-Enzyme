@@ -1,0 +1,36 @@
+[% INCLUDE "header.tt" %]
+
+
+<div id="title">View [% crud.moniker %]</div>
+
+<form>
+<fieldset>
+    <legend>[% crud.moniker | html %] '[% item  %]'</legend>
+
+    [% FOR column = item.columns %]
+        [% NEXT IF column == item.primary_column %]
+        <span class="item_field_data">
+        
+        <span class="item_field">[% crud.column_monikers.$column | html %]</span>
+
+        <span class="item_data">[% item.$column | html %]</span>
+        <!-- TODO: urlify URIs -->
+        <!-- bring in related objects and link to them -->
+
+        </span>
+        <br clear="all">
+    [% END; %]
+
+    <span class="item_local_action">
+    <a href="[% c.uri_for('edit', item.id) %]">Edit</a> | <a href="[% c.uri_for('destroy', item.id) %]">Delete</a>
+    </span>
+
+</fieldset></form>
+
+<!-- TODO: Related -->
+
+<a href="[% c.uri_for('add') %]">Add</a>
+<a href="[% c.uri_for('list') %]">List</a>
+
+[% INCLUDE "footer.tt" %]
+

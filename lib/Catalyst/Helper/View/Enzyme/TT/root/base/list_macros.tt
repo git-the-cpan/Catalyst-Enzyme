@@ -1,0 +1,21 @@
+[% MACRO list_row_columns(item) BLOCK; %]
+            [% FOR column = crud.model.columns.list %]
+                [% NEXT IF column == primary %]
+                <td>[% item.$column %]</td>
+                    <!-- TODO: link to edit/view on primary field -->
+            [% END %]
+[% END; %]
+
+
+
+[% MACRO list_additional_column_headings(item) BLOCK; %]
+[% END; %]
+
+
+
+[% MACRO list_actions(item) BLOCK; %]
+                <a href="[% c.uri_for('view', item.id) %]">View</a>
+                <a href="[% c.uri_for('edit', item.id) %]">Edit</a>
+                <a href="[% c.uri_for('destroy', item.id) %]">Delete</a>
+[% END; %]
+

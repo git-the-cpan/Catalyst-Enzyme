@@ -1,0 +1,39 @@
+[% MACRO form_add_column_input(do_action, column, column_moniker)  BLOCK; %]
+        <label>
+        <span class="field">[% column_moniker %]</span>
+
+        [% element = c.view("TT").element_req(c, do_action, column); %]
+        [% element.as_HTML('<>&"\'') %]
+
+        [% IF c.form.missing(column); %]
+            <span class="error_text">[% c.form.msgs.$column || 'Missing'; %]</span>
+        [% ELSIF c.form.invalid(column); %]
+            <span class="error_text">[% c.form.msgs.$column || 'Invalid'; %]</span>
+        [% END; %]
+	    </label>
+
+[% END; %]
+
+
+
+[% MACRO form_edit_column_input(do_action, column, column_moniker)  BLOCK; %]
+        <label>
+        <span class="field">[% column_moniker %]</span>
+
+        [%
+        IF c.action.name == do_action;       #invalid, redisplay req            
+            element = c.view("TT").element_req(c, do_action, column);
+        ELSE;                                #display item
+            element = item.to_field(column);
+        END;
+        %]
+        [% element.as_HTML('<>&"\'') %]
+
+        [% IF c.form.missing(column); %]
+            <span class="error_text">[% c.form.msgs.$column || 'Missing'; %]</span>
+        [% ELSIF c.form.invalid(column); %]
+            <span class="error_text">[% c.form.msgs.$column || 'Invalid'; %]</span>
+        [% END; %]
+        </label>
+
+[% END; %]
