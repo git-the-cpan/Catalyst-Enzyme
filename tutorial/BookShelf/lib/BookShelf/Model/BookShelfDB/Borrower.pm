@@ -1,4 +1,4 @@
-package BookShelf::Model::BookShelfDB::Book;
+package BookShelf::Model::BookShelfDB::Borrower;
 
 use strict;
 
@@ -6,7 +6,7 @@ use strict;
 
 =head1 NAME
 
-BookShelf::Model::BookShelfDB::Book - CDBI Table Class
+BookShelf::Model::BookShelfDB::Borrower - CDBI Table Class
 
 
 
@@ -18,31 +18,30 @@ See L<BookShelf>
 
 =head1 DESCRIPTION
 
-CDBI Table Class with Enzyme CRUD configuration.
+CDBI Table Class.
 
 =cut
 
 
-__PACKAGE__->columns(Stringify => "title");
+__PACKAGE__->columns(Stringify => "name");
 
 
+use Data::FormValidator::Constraints qw(:regexp_common);
 __PACKAGE__->config(
-
     crud => {
-        moniker => "Book",
-        column_monikers => { __PACKAGE__->default_column_monikers, isbn => "ISBN" },
-        rows_per_page => 10,
         data_form_validator => {
             optional => [ __PACKAGE__->columns ],
-            required => [ qw/ title format genre /],
+            required => [ "name" ],
             constraint_methods => {
-                isbn => { name => "fv_isbn", constraint => qr/^[\d-]+$/ },
+                url => FV_URI(),
+                email => Data::FormValidator::Constraints::email(),
             },
             missing_optional_valid => 1,
             msgs => {
                 format => '%s',
                 constraints => {
-                    fv_isbn => "Not an ISBN number",
+                    FV_URI => "Not a URL",
+                    email => "Not an email",
                 },
             },
         },

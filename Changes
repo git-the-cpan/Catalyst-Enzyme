@@ -1,17 +1,5 @@
-Revision history for Catalyst-Enzyme
+Revision history for Catalyst-View-GraphViz
 
-
-
-* 0.06 - 2005-12-01
-
-- Docs
-
-- Fixed broken helper (CDBI and tests)
-
-
-
-* 0.05 - 2005-12-01
-
-CPAN POD stuff and docs
-        
+0.01    Date/time
+        First version, released on an unsuspecting world.
 

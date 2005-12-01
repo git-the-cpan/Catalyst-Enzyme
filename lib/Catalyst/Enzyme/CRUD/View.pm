@@ -1,6 +1,6 @@
 package Catalyst::Enzyme::CRUD::View;
 
-our $VERSION = '0.10';
+our $VERSION = '0.01';
 
 
 
@@ -12,8 +12,8 @@ use HTML::Element;
 
 =head1 NAME
 
-Catalyst::Enzyme::CRUD::View - Catalyst View helper methods for CRUD
-templates
+Catalyst::View::Enzyme::CRUD::View - Catalyst View helper methods
+for CRUD templates
 
 =head1 SYNOPSIS
 

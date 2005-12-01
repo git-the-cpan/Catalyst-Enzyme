@@ -1,13 +1,6 @@
 package Catalyst::Helper::Model::Enzyme::CDBI;
 
-our $VERSION = '0.10';
-
-
-
 use strict;
-use Class::DBI::Loader;
-
-
 
 =head1 NAME
 

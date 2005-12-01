@@ -13,9 +13,8 @@
 <a href="/borrower">Borrower</a> |
 <a href="/genre">Genre</a> |
 <a href="/format">Format</a>
-<br />
+<br>
 
-    
 [%IF message %]
 <div class="message">[% message | html %]</div>
 [% END %]
