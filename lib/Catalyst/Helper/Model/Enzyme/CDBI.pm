@@ -5,6 +5,7 @@ our $VERSION = '0.10';
 
 
 use strict;
+use Class::DBI::Loader;
 
 
 

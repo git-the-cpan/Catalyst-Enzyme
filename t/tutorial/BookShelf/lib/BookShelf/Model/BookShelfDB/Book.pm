@@ -18,7 +18,7 @@ See L<BookShelf>
 
 =head1 DESCRIPTION
 
-CDBI Table Class.
+CDBI Table Class with Enzyme CRUD configuration.
 
 =cut
 
@@ -26,10 +26,8 @@ CDBI Table Class.
 __PACKAGE__->columns(Stringify => "title");
 
 
-#See the Catalyst::Enzyme docs and tutorial for information on what
-#CRUD options you can configure here. These include: moniker,
-#column_monikers, rows_per_page, data_form_validator.
 __PACKAGE__->config(
+
     crud => {
         moniker => "Book",
         column_monikers => { __PACKAGE__->default_column_monikers, isbn => "ISBN" },

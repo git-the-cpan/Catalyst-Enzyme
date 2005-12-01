@@ -18,15 +18,13 @@ See L<BookShelf>
 
 =head1 DESCRIPTION
 
-CDBI Table Class.
+CDBI Table Class with Enzyme CRUD configuration.
 
 =cut
 
 
-__PACKAGE__->columns(Stringify => "name");
-
-
 use Data::FormValidator::Constraints qw(:regexp_common);
+__PACKAGE__->columns(Stringify=> qw/name/);
 __PACKAGE__->config(
     crud => {
         data_form_validator => {

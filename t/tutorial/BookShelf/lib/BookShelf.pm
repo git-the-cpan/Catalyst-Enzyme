@@ -41,6 +41,9 @@ Catalyst based application.
 
 =cut
 
+#
+# Output a friendly welcome message
+#
 sub default : Private {
     my ( $self, $c ) = @_;
 

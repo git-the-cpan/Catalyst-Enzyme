@@ -3,7 +3,7 @@ use base 'Catalyst::Base';
 
 
 
-our $VERSION = 0.05;
+our $VERSION = 0.06;
 
 
 
@@ -66,7 +66,7 @@ together into a unified whole. There are other ways to do this
 
 First, look at these docs, and do the L</TUTORIAL>.
 
-Then look at L</Further Documentation>
+Then look at L</Further Documentation>.
 
 
 
@@ -87,16 +87,18 @@ templates or template fragments by placing them in a directory
 specific to the Controller.
 
 The Controller code duplication resulted in the class
-L<Catalyst::Controller::CRUD::Base>. This has since grown
-significantly and now includes uniform presentation of status and
-messages to the user.
+L<Catalyst::Enzyme::CRUD::Controller>. This has since grown
+significantly and now includes more robust CRUD behaviour, uniform
+presentation of status and messages to the user.
 
 
 =head2 Assumptions
 
-Your application uses Class::DBI based model classes.
+Your application uses L<Class::DBI> based model classes.
 
-You want CRUD functionality.
+You want CRUD functionality, either as part of your application
+(perhaps as a mangagement interface for internal use), or just to get
+started with something.
 
 You are willing to read and understand the source (both code and
 templates) in order to modify them. While Enzyme can get you started
@@ -106,14 +108,16 @@ framework. Change it, adapt it to your needs.
 
 =head2 Overview
 
-At the bottom is a L<Class::DBI> database table.
+At the bottom is a database table.
 
-On top of the table there is a Catalyst Model class (which also
-inherits from Catalyst::Enzyme::CRUD::Model). The Model class provides
-some meta data so Enzyme can display the Model objects properly.
+On top of the table there is a Catalyst L<Class::DBI> Model class
+(which also inherits from L<Catalyst::Enzyme::CRUD::Model>). The Model
+class provides some meta data so Enzyme can display the Model objects
+properly.
 
-For each Model class there is a CRUD Controller class providing
-actions for create, edit, etc.
+For each Model class there is a CRUD Controller class (based on
+L<Catalyst::Enzyme::CRUD::Controller> providing actions for L<create>,
+L<edit>, etc.
 
 There is a set of default TT templates to display the Model
 objects. You can override templates per Controller.
@@ -212,8 +216,13 @@ Controllers, but almost all text is in the templates.
 Read up on the config for your Model classes:
 L<Catalyst::Enzyme::CRUD::Model>
 
+Look through the templates in ./root/base and make sure you have a
+basic understanding of what they do.
+
 Read the source of L<Catalyst::Enzyme::CRUD::Controller> to understand
-how you can use, adapt, and extend it.
+how you can use, adapt, and extend it. Or ignore it. You may have much
+better ways of doing things, or totally different needs for your
+application.
 
 
 
@@ -221,6 +230,9 @@ how you can use, adapt, and extend it.
 
 Let's take the Catalyst example BookDB application and see what it
 looks like with only a CRUD layer on top of the database.
+
+Note: this was done using Windows, so make sure you adapt the / vs \
+to your filesystem conventions.
 
 Browse to http://localhost:3000/ at regular intervals during the setup
 to see the current state of the application.
@@ -233,11 +245,18 @@ Rename the existing C<BookShelf> application directory to something
 else, open up a shell in C<tutorial> and go ahead...
 
 
+
 =head2 Create Catalyst application BookShelf
 
     catalyst BookShelf
     ... created files ...
     cd BookShelf
+
+Run test
+
+    prove -Ilib t
+
+Start server
 
     script\bookshelf_server.pl
 
@@ -260,8 +279,23 @@ and replace it with
 
     $c->res->redirect("/book");
 
-This url doesn't exist yet, but we'll create it soon.
+This url doesn't exist yet, but we'll create it soon (so don't try to
+restart the server just yet).
 
+Note that the test t/01app.t will fail from now on since a redirect
+isn't is_success. Figure out what
+
+    prove -Ilib -v t\01app.t
+
+Since that test doesn't reflect what the application does anymore, you
+should probably change it to this:
+
+    use Test::More tests => 1;
+    use_ok( Catalyst::Test, 'BookShelf' );
+
+And the test pass again. That's nice.
+
+    prove -Ilib t
 
 
 =head2 Create TT View
@@ -287,12 +321,15 @@ alter the web pages for only that part of the application.
 
 =head2 Create the database
 
+The bookdb.sql file is available in the C<t/tutorial/database>
+directory. It's probably a good idea to take a look at it to get an
+idea of what it provides. The foreign key relationships are especially
+interesting.
+
 Note: Make sure you have L<DBI::Shell> installed before running C<dbish>.
 
     mkdir db
     dbish dbi:SQLite:dbname=db/bookshelf.db < ..\database\bookdb.sql
-
-(the bookdb.sql file is available in the C<tutorial/database> directory)
 
 
 =head2 Create the CDBI Model
@@ -347,7 +384,7 @@ A few things to note:
             moniker => "Book",
 
 The C<Moniker> is optional and would have defaulted to Book
-anyway. But that's how to do it. So now you know.
+anyway. But that's how to do it.
 
             column_monikers => { __PACKAGE__->default_column_monikers, isbn => "ISBN" },
 
@@ -388,6 +425,10 @@ validator config makes all columns optional.
 This should always be in your dfv config, otherwise updates with empty
 values will not work.
 
+Read more about the configuration values in
+L<Catalyst::Enzyme::CRUD::Model>.
+
+
 
 =head2 Create Book CRUD Controller
 
@@ -398,12 +439,34 @@ by adding a CRUD controller.
     ... created files ...
 
 
+The most important thing to note in the created
+BookShelf\Controller\Book.pm is the sub where the Model file is
+specified:
+
+    sub model_class {
+        return("BookShelf::Model::BookShelfDB::Book");
+    }
+
+
 
 =head2 Test the book CRUD
 
+Now we finally have all the required components in place to take a
+look at the Book table. But why not run the tests again.
+
+    prove -Ilib t
+
+All test should pass (and they don't really do much anyway. At least
+the Controller tests make a request to the default action).
+
+Run the server:
+
+    script\bookshelf_server.pl
+
 When you surf around at L<http://localhost:3000/book> and check out
 all the books you may notice that Borrower is a number, and so is
-Genre. That's because we haven't configured the other Models yet.
+Genre. That's because we haven't configured the other Models with a
+Stringify column yet.
 
 When you add new Books, note how the C<title> is mandatory. See what
 happens if you omit it.
@@ -412,6 +475,9 @@ Also note how the ISBN number is optional, but if there is anything
 entered, it must abide by the constraint. (I have no idea whether
 that's actually a proper constraint for ISBN numbers).
 
+If you set the rows_per_page to 3, you should see the paging in
+action. If not, add a few books.
+
 
 
 =head2 Add links between the tables
@@ -419,10 +485,10 @@ that's actually a proper constraint for ISBN numbers).
 Edit the root/base/header.tt and add this inside the content div so we
 can jump between the tables:
 
-    <a href="/book/">Book</a> |
-    <a href="/borrower/">Borrower</a> |
-    <a href="/genre/">Genre</a> |
-    <a href="/format/">Format</a>
+    <a href="/book">Book</a> |
+    <a href="/borrower">Borrower</a> |
+    <a href="/genre">Genre</a> |
+    <a href="/format">Format</a>
     <br />
 
 
@@ -462,11 +528,11 @@ The normal way to import the default FormValidator::Constraints would be
 
     use Data::FormValidator::Constraints qw(:regexp_common :closures);
 
-but that imports subs like C<email> and C<phone> into this
-namespace. But... since this is our model class, there is already
-field accessors by that names in our symbol table, and that will
-clash. Hence the use of C<Data::FormValidator::Constraints::email> in
-the config.
+and the C<:closures> group imports subs like C<email> and C<phone>
+into this namespace. But... since this is our model class, there is
+already field accessors by that names in our symbol table, and that
+will clash. Hence the use of
+C<Data::FormValidator::Constraints::email> in the config.
 
     __PACKAGE__->columns(Stringify=> qw/name/);
 
@@ -492,6 +558,9 @@ the PK in the Book listing.
     script\bookshelf_create.pl controller Borrower Enzyme::CRUD BookShelfDB::Borrower
     script\bookshelf_create.pl controller Genre Enzyme::CRUD BookShelfDB::Genre
     script\bookshelf_create.pl controller Format Enzyme::CRUD BookShelfDB::Format
+
+
+Now restart the server and see how much prettier the Books listing is.
 
 
 =head2 And we're done

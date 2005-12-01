@@ -2,6 +2,13 @@ Revision history for Catalyst-Enzyme
 
 
 
+* 0.06 - 2005-12-01
+
+- Docs
+
+- Fixed broken helper (CDBI and tests)
+
+
 
 * 0.05 - 2005-12-01
 

@@ -3,19 +3,26 @@ use base 'Catalyst::Enzyme::CRUD::Controller';
 
 use strict;
 use warnings;
-use base 'Catalyst::Controller';
+
+
 
 =head1 NAME
 
-BookShelf::Controller::Genre - Catalyst Controller
+BookShelf::Controller::Genre - Catalyst Enzyme CRUD Controller
+
+
 
 =head1 SYNOPSIS
 
 See L<BookShelf>
 
+
+
 =head1 DESCRIPTION
 
-Catalyst Controller.
+Catalyst Enzyme Controller with CRUD support.
+
+
 
 =head1 METHODS
 
@@ -30,14 +37,23 @@ sub model_class {
 
 
 
+=head1 SEE ALSO
+
+L<BookShelf>, L<Catalyst::Enzyme::CRUD::Controller>,
+L<Catalyst::Enzyme>
+
+
+
 =head1 AUTHOR
 
 A clever guy
 
+
+
 =head1 LICENSE
 
-This library is free software, you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This library is free software . You can redistribute it and/or modify
+it under the same terms as perl itself.
 
 =cut
 

@@ -151,6 +151,8 @@ it under the same terms as perl itself.
 1;
 __test__
 use strict;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use_ok( 'Catalyst::Test', '[% app %]' );
 use_ok('[% class %]');
+
+ok( request('/[% uri %]')->is_success );

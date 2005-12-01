@@ -22,20 +22,19 @@ Catalyst::Enzyme::CRUD::Model - CRUD Model Component
 
 CRUD Model Component.
 
-
-
-=head1 MODEL CONFIGURATION
-
 This is how to configure your model classes' meta data.
 
 
-=head2 __PACKAGE__->config( crud => {} )
+=head1 ENZYME MODEL CONFIGURATION: 
 
-Some things are configured
+Some things are Enzyme related configurations. These go in the:
 
-=over 4
+    __PACKAGE__->config( crud => {} )
 
-=item moniker
+hash ref.
+
+
+=head2 moniker
 
 Human readable name for this model.
 
@@ -45,42 +44,41 @@ Default: MyApp::Model::CDBI::ShopLocation becomes "Shop Location".
 
 
 
-=item column_monikers
+=head2 column_monikers
 
 Column monikers. Hash ref with (key: column name: value:
 moniker).
 
-Default: based on the column name. Override specific column names like this:
+Default: based on the column name (id_% and %id removed, the
+capitalized).
+
+Override specific column names like this:
 
     column_monikers => { __PACKAGE__->default_column_monikers, url => "URL" },
 
 
-=item data_form_validator
+=head2 data_form_validator
 
 Validation rules for the data fields.
 
-Default: no validation
+Default: no validation, all columns are optional.
 
-Note that you need to provide the entire config hashref for
-L<Data::FormValidator>.
+Note that you need to provide the entire config hashref that
+L<Data::FormValidator> expects.
 
 
-=item rows_per_page
+=head2 rows_per_page
 
 Number of rows per page when using a pager (which will happen unless
 paging is disabled by setting this value is 0).
 
 Default: 20
 
-=back
 
 
+=head1 Class::DBI configuration
 
-=head2 Class::DBI configuration
-
-=over 4
-
-=item Stringified column
+=head2 Stringified column
 
 
 Let's say your Model class Book has a Foreign Key (FK) genre_id to the
@@ -98,23 +96,25 @@ to_field method.
 
 
 
-=item Fields to display
+=head2 Fields to display
 
   __PACKAGE__->columns(crud_view_columns => qw/ COLUMNS /);
 
 Default: all columns.
 
+(not yet implemented)
 
-=item Fields to display in lists
+=head2 Fields to display in lists
 
   __PACKAGE__->columns(crud_list_columns => qw/ COLUMNS /);
 
 Default: all columns.
 
-=back
+(not yet implemented)
 
 
-=head2 Example
+
+=head1 EXAMPLE
 
     use Data::FormValidator::Constraints qw(:regexp_common);
 
