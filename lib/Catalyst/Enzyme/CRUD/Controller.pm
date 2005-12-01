@@ -1,7 +1,7 @@
 package Catalyst::Enzyme::CRUD::Controller;
 use base 'Catalyst::Base';
 
-our $VERSION = 0.01;
+our $VERSION = 0.04;
 
 
 
@@ -28,10 +28,17 @@ See L<Catalyst::Enzyme>
 The model class, overloaded by you in each controller class to return
 the actual class name for the Model this controller should handle.
 
+So in your Controller classes, something like this is recommended:
+
+    sub model_class {
+        return("BookShelf::Model::BookShelfDB::Genre");
+    }
+
 =cut
 sub model_class {
     return("");
 }
+
 
 
 =head1 METHODS - ACTIONS
@@ -43,7 +50,7 @@ you can adjust or block them in your own code.
 
 They also deal with form validation, messages, and errors in a certain
 way that you could use (or not, you may have a better way) in your own
-actions.
+Controller actions.
 
 
 =head2 auto

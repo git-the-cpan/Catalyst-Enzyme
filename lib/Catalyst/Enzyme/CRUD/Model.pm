@@ -4,7 +4,7 @@ use base 'Catalyst::Model';
 
 
 
-our $VERSION = 0.01;
+our $VERSION = 0.04;
 
 
 
