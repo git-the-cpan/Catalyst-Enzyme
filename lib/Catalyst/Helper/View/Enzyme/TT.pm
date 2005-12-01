@@ -1,5 +1,8 @@
 package Catalyst::Helper::View::Enzyme::TT;
 
+our $VERSION = '0.10';
+
+
 use strict;
 use Data::Dumper;
 use File::Basename;

@@ -1,6 +1,12 @@
 package Catalyst::Helper::Model::Enzyme::CDBI;
 
+our $VERSION = '0.10';
+
+
+
 use strict;
+
+
 
 =head1 NAME
 

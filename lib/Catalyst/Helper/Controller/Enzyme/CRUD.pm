@@ -1,6 +1,10 @@
 package Catalyst::Helper::Controller::Enzyme::CRUD;
 
+our $VERSION = '0.10';
+
+
 use strict;
+
 
 =head1 NAME
 

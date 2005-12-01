@@ -1,16 +1,17 @@
 package Catalyst::Enzyme::CRUD::Model;
-use strict;
 use base 'Catalyst::Model';
 
+our $VERSION = 0.10;
 
 
-our $VERSION = 0.04;
+
+use strict;
 
 
 
 =head1 NAME
 
-Catalyst::Model::Enzyme::CRUD - CRUD Model Component
+Catalyst::Enzyme::CRUD::Model - CRUD Model Component
 
 
 =head1 SYNOPSIS

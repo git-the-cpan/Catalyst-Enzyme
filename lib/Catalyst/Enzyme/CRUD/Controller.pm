@@ -1,7 +1,7 @@
 package Catalyst::Enzyme::CRUD::Controller;
 use base 'Catalyst::Base';
 
-our $VERSION = 0.04;
+our $VERSION = 0.10;
 
 
 
@@ -13,7 +13,8 @@ use Carp;
 
 =head1 NAME
 
-Catalyst::Controller::CRUD::Base - CRUD Controller Base Class
+Catalyst::Enzyme::CRUD::Controller - CRUD Controller Base Class with
+CRUD support
 
 =head1 SYNOPSIS
 
