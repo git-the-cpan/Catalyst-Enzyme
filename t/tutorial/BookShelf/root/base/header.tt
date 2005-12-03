@@ -9,6 +9,13 @@
 
 <div class="content">
 
+<a href="/book">Book</a> |
+<a href="/borrower">Borrower</a> |
+<a href="/genre">Genre</a> |
+<a href="/format">Format</a>
+<br />
+
+    
 [%IF message %]
 <div class="message">[% message | html %]</div>
 [% END %]

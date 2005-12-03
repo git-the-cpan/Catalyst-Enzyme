@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Catalyst-Enzyme
-version:      0.03
+version:      0.07
 version_from: lib/Catalyst/Enzyme.pm
 installdirs:  site
 requires:
@@ -11,11 +11,13 @@ requires:
     Catalyst::Plugin::FormValidator: 0
     Catalyst::View::TT::ControllerLocal: 0
     Class::DBI:                    0.96
-    Class::DBI::AsForm:            0.96
+    Class::DBI::AsForm:            0
     Class::DBI::Pager:             0
     Data::FormValidator:           0
+    DBI::Shell:                    0
     File::Slurp:                   0
     HTML::Element:                 0
+    List::Util:                    0
     Path::Class:                   0
     Test::More:                    0
     URI:                           0

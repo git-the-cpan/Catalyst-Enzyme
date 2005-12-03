@@ -1,5 +1,45 @@
-Revision history for Catalyst-View-GraphViz
+Revision history for Catalyst-Enzyme
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+
+* 0.07 - 2005-12-03
+
+- Changed templates in this version. Run the View helper to generate
+  new templates which you can merge with your existing ones.
+
+- Detailed selection of which columns to display for lists, viewing,
+  etc.
+
+- Support for ordered colum names for lists, viewing, etc.
+
+- Better Model helper, with default column names and Stringify column prefilled 
+
+- Tests - Tests uncovered two cosmetic bugs in the View column ->
+  moniker. Fixed.
+
+- do_add now redirects to the view/id instead of list
+
+- do_edit now redirects to the view/id instead of edit/id
+
+- Tests now rebuild the database using dbish. If anything fails during
+  tests, this may well be it.
+
+- Templates updated to use uri_for_controller instead of uri_for
+
+- Destroy renamed to delete. Templates updated! do_delete redirects to
+  list.
+
+
+
+* 0.06 - 2005-12-01
+
+- Docs
+
+- Fixed broken helper (CDBI and tests)
+
+
+
+* 0.05 - 2005-12-01
+
+CPAN POD stuff and docs
+        
 

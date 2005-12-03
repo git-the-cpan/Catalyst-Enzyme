@@ -1,16 +1,17 @@
 package Catalyst::Enzyme::CRUD::Model;
-use strict;
 use base 'Catalyst::Model';
 
+our $VERSION = 0.10;
 
 
-our $VERSION = 0.01;
+
+use strict;
 
 
 
 =head1 NAME
 
-Catalyst::Model::Enzyme::CRUD - CRUD Model Component
+Catalyst::Enzyme::CRUD::Model - CRUD Model Component
 
 
 =head1 SYNOPSIS
@@ -21,20 +22,19 @@ Catalyst::Model::Enzyme::CRUD - CRUD Model Component
 
 CRUD Model Component.
 
-
-
-=head1 MODEL CONFIGURATION
-
 This is how to configure your model classes' meta data.
 
 
-=head2 __PACKAGE__->config( crud => {} )
+=head1 ENZYME MODEL CONFIGURATION: 
 
-Some things are configured
+Some things are Enzyme related configurations. These go in the:
 
-=over 4
+    __PACKAGE__->config( crud => {} )
 
-=item moniker
+hash ref.
+
+
+=head2 moniker
 
 Human readable name for this model.
 
@@ -44,42 +44,41 @@ Default: MyApp::Model::CDBI::ShopLocation becomes "Shop Location".
 
 
 
-=item column_monikers
+=head2 column_monikers
 
 Column monikers. Hash ref with (key: column name: value:
 moniker).
 
-Default: based on the column name. Override specific column names like this:
+Default: based on the column name (id_% and %id removed, the
+capitalized).
+
+Override specific column names like this:
 
     column_monikers => { __PACKAGE__->default_column_monikers, url => "URL" },
 
 
-=item data_form_validator
+=head2 data_form_validator
 
 Validation rules for the data fields.
 
-Default: no validation
+Default: no validation, all columns are optional.
 
-Note that you need to provide the entire config hashref for
-L<Data::FormValidator>.
+Note that you need to provide the entire config hashref that
+L<Data::FormValidator> expects.
 
 
-=item rows_per_page
+=head2 rows_per_page
 
 Number of rows per page when using a pager (which will happen unless
 paging is disabled by setting this value is 0).
 
 Default: 20
 
-=back
 
 
+=head1 CDBI CONFIGURATION
 
-=head2 Class::DBI configuration
-
-=over 4
-
-=item Stringified column
+=head2 Stringified column
 
 
 Let's say your Model class Book has a Foreign Key (FK) genre_id to the
@@ -97,23 +96,24 @@ to_field method.
 
 
 
-=item Fields to display
+=head2 Fields to display
 
-  __PACKAGE__->columns(crud_view_columns => qw/ COLUMNS /);
+The following set of columns can be defined for various uses in the
+templates. The column names both define which columns to display, and
+in which order.
 
-Default: all columns.
+    __PACKAGE__->columns(view_columns => qw/ COLUMNS /);
+    __PACKAGE__->columns(edit_columns => qw/ COLUMNS /);
+    __PACKAGE__->columns(list_columns => qw/ COLUMNS /);
+
+The default is all columns except primary keys.
+
+These are pre-entered by the Model helper so it's easy for you to
+remove or change order. If you like it the way it is, just delete the
+lines altogether.
 
 
-=item Fields to display in lists
-
-  __PACKAGE__->columns(crud_list_columns => qw/ COLUMNS /);
-
-Default: all columns.
-
-=back
-
-
-=head2 Example
+=head1 EXAMPLE
 
     use Data::FormValidator::Constraints qw(:regexp_common);
 
@@ -182,13 +182,128 @@ sub default_column_moniker {
     my $pkg = shift;
     my ($column) = @_;
 
-    my $name = ucfirst(lc($column));
+    my $name = lc($column);
     $name =~ s/^id_//i;
     $name =~ s/_id$//i;
 
-    $name =~ s/(.)_+(.)/ "$1 " . uc($2) /e;
+    $name =~ s/(.)[_\s]+(.)/ "$1 " . uc($2) /eg;
 
+    $name = ucfirst($name);
+    
     return($name);
+}
+
+
+
+
+
+=head2 list_columns()
+
+Return array with the column names suitable for a list of the objects
+in this Model.
+
+Configure this with:
+
+    __PACKAGE__->columns(list_columns => qw/ column names /);
+
+Default: the default_columns.
+
+=cut
+sub list_columns {
+    my $pkg = shift;
+    return($pkg->named_columns("list_columns"));
+}
+
+
+
+
+
+=head2 view_columns()
+
+Return array with the column names suitable for viewing an object in
+this Model.
+
+Configure this with:
+
+    __PACKAGE__->columns(view_columns => qw/ column names /);
+
+Default: the default_columns.
+
+=cut
+sub view_columns {
+    my $pkg = shift;
+    return($pkg->named_columns("view_columns"));
+}
+
+
+
+
+
+=head2 edit_columns()
+
+Return array with the column names suitable for editing an object in
+this Model.
+
+Configure this with:
+
+    __PACKAGE__->columns(edit_columns => qw/ column names /);
+
+Default: edit_columns (if specified), otherwise the default_columns.
+
+=cut
+sub edit_columns {
+    my $pkg = shift;
+
+    my @columns = $pkg->columns("view_columns");
+    @columns or @columns = $pkg->view_columns;
+    @columns or @columns = $pkg->default_columns();
+    
+    return(@columns);
+}
+
+
+
+
+
+=head2 named_columns($group_name)
+
+Return array with the column names identified by
+__PACKAGE__->columns($group_name).
+
+Configure this with:
+
+    __PACKAGE__->columns($group_name => qw/ column names /);
+
+=cut
+sub named_columns {
+    my $pkg = shift;
+    my ($group_name) = @_;
+
+    my @columns = $pkg->columns($group_name);
+    @columns or @columns = $pkg->default_columns();
+
+    return(@columns);
+}
+
+
+
+
+
+=head2 default_columns()
+
+Return array with the default column names suitable for an object in
+this Model.
+
+This is all column names, except PK columns.
+
+=cut
+sub default_columns {
+    my $pkg = shift;
+
+    my %pk_name_exists = map { $_ => 1 } $pkg->columns("Primary");
+    my @columns = grep { ! $pk_name_exists{$_} } $pkg->columns();
+    
+    return(@columns);
 }
 
 

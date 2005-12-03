@@ -1,6 +1,15 @@
 package Catalyst::Helper::Model::Enzyme::CDBI;
 
+our $VERSION = '0.10';
+
+
+
 use strict;
+use Class::DBI::Loader;
+
+use List::Util qw/first/;
+
+
 
 =head1 NAME
 
@@ -61,6 +70,8 @@ sub mk_compclass {
     $helper->mk_dir($path);
 
     for my $c ( $loader->classes ) {
+        $helper->{default_columns} = [ $self->default_columns($c) ];
+        $helper->{main_column} = $self->default_main_column($c);
         $helper->{tableclass} = $c;
         $helper->{tableclass} =~ /\W*(\w+)$/;
         my $f = $1;
@@ -86,6 +97,53 @@ sub mk_comptest {
         $helper->render_file( 'test', $test );
     }
 }
+
+
+
+=head2 default_columns($pkg)
+
+Return array with the default column names suitable for an object in
+model $pkg.
+
+This is all column names, except PK columns.
+
+=cut
+sub default_columns {
+    my $self = shift;
+    my ($pkg)  = @_;
+
+    my %pk_name_exists = map { $_ => 1 } $pkg->columns("Primary");
+    my @columns = grep { ! $pk_name_exists{$_} } $pkg->columns();
+    
+    return(sort @columns);
+}
+
+
+
+=head2 default_main_column($pkg)
+
+Return name of the probable main column for Model $pkg.
+
+Default: name or title or something "name*" or "*name" or "*name*" or
+MAIN_COLUMN.
+
+=cut
+sub default_main_column {
+    my $self = shift;
+    my ($pkg)  = @_;
+
+    my %name = map { lc($_) => $_ } $pkg->columns;
+    my $main = $name{name} ||
+            $name{title} ||
+            first { $_ =~  /name$/i } $pkg->columns || 
+            first { $_ =~ /^name/i  } $pkg->columns || 
+            first { $_ =~  /name/i  } $pkg->columns || 
+            "MAIN_COLUMN";
+    
+    return($main);
+}
+
+
 
 
 
@@ -208,7 +266,9 @@ CDBI Table Class with Enzyme CRUD configuration.
 =cut
 
 
-#__PACKAGE__->columns(Stringify => "MAIN_COLUMN");
+#__PACKAGE__->columns(Stringify => "[% main_column %]");
+#__PACKAGE__->columns(view_columns => qw/ [% default_columns.join(" ") %] /);
+#__PACKAGE__->columns(list_columns => qw/ [% default_columns.join(" ") %] /);
 
 
 #See the Catalyst::Enzyme docs and tutorial for information on what

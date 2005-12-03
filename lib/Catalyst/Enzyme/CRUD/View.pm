@@ -1,6 +1,6 @@
 package Catalyst::Enzyme::CRUD::View;
 
-our $VERSION = '0.01';
+our $VERSION = '0.10';
 
 
 
@@ -12,8 +12,8 @@ use HTML::Element;
 
 =head1 NAME
 
-Catalyst::View::Enzyme::CRUD::View - Catalyst View helper methods
-for CRUD templates
+Catalyst::Enzyme::CRUD::View - Catalyst View helper methods for CRUD
+templates
 
 =head1 SYNOPSIS
 
@@ -69,6 +69,12 @@ sub element_req {
 
 
 
+=head1 CATALYST METHODS
+
+These methods are injected into the Catalyst class, available to call
+on the $c object.
+
+
 =head2 $c->this_request_except(%new_params)
 
 Return uri which is identical to the current request, except
@@ -87,6 +93,27 @@ sub Catalyst::this_request_except {
 
     return($uri);
 }
+
+
+
+
+
+=head2 $c->uri_for_controller($action, @params)
+
+Return a URI that points to the $action in this controller, no matter
+what the current request is (it could be to an action in another
+Controller which forwarded to this Controller (by first forwarding to
+this controller's C<set_crud_controller>).
+
+The @params are added to the URI the same way as in C<uri_for>.
+
+=cut
+sub Catalyst::uri_for_controller {
+    my ($c, $action, @params) = @_;
+    return( $c->uri_for( $c->stash->{controller_namespace}, $action, @params) );
+}
+
+
 
 
 
