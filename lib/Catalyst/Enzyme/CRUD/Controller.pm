@@ -84,6 +84,7 @@ Set stash keys:
 
  crud (to the crud_config)
  controller_namespace (to the Controller's namespace)
+ uri_for_list (to a version that accepts array refs from TT)
 
 Return 1.
 
@@ -131,6 +132,7 @@ sub set_crud_controller : Private {
 
     $c->stash->{crud} = $crud_config;
     $c->stash->{controller_namespace} = "/" . $self->action_namespace($c);
+    $c->stash->{uri_for_list} = sub { $c->uri_for(map { ref $_ eq 'ARRAY' ? @$_ : $_ } @_); };
     
     return(1);
 }
@@ -157,7 +159,7 @@ Display list template
 
 sub list : Local {
     my ( $self, $c ) = @_;
-    my $model = $self->model_with_pager($c, $self->crud_config->{rows_per_page}, $c->req->param("page"));    
+    my $model = $self->model_with_pager($c, $self->crud_config->{rows_per_page}, $c->req->param("page"));
     $c->stash->{items} = [ $model->retrieve_all() ];
     $c->stash->{template} = 'list.tt';
 }

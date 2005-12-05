@@ -80,7 +80,6 @@ Default: 20
 
 =head2 Stringified column
 
-
 Let's say your Model class Book has a Foreign Key (FK) genre_id to the
 Genre Model class.
 
@@ -93,6 +92,9 @@ In the Genre model class, define the column group Stringify, like this:
 
 This magic is performed by L<Class::DBI> and L<Class::DBI::AsForm>'s
 to_field method.
+
+When objects are displayed in a C<list>, the text in the Stringify
+column will become a link to C<view> the object.
 
 
 
@@ -109,8 +111,9 @@ in which order.
 The default is all columns except primary keys.
 
 These are pre-entered by the Model helper so it's easy for you to
-remove or change order. If you like it the way it is, just delete the
-lines altogether.
+remove or change the order. If you like it the way it is, just delete
+the lines altogether.
+
 
 
 =head1 EXAMPLE
@@ -118,6 +121,9 @@ lines altogether.
     use Data::FormValidator::Constraints qw(:regexp_common);
 
     __PACKAGE__->columns(Stringify => qw/ url /);
+    __PACKAGE__->columns(list_columns=> qw/ name email url /);
+    __PACKAGE__->columns(view_columns=> qw/ name email url phone /);
+
 
     __PACKAGE__->config(
 
@@ -304,6 +310,33 @@ sub default_columns {
     my @columns = grep { ! $pk_name_exists{$_} } $pkg->columns();
     
     return(@columns);
+}
+
+
+
+
+
+=head2 namespace_of_column_has_a($c, $column)
+
+If $column has a has_a relationship to another table, return the
+Model's Controller's namespace (or the first if there are many).
+
+Return "" if there are no related tables.
+
+=cut
+sub namespace_of_column_has_a {
+    my $pkg = shift;
+    my ($c, $column) = @_;
+
+    my $has_a = $pkg->meta_info->{has_a}->{$column} or return("");
+#    my $has_a_class = $has_a->foreign_class or return("");
+#    $c->models
+
+    #todo: this is a hack, replace with a proper search-for-the controller with model_class
+    my $namespace = $has_a->foreign_class or return("");
+    $namespace =~ s/^(.*?)::(\w+)$/lc($2)/e or return("");
+    
+    return("/$namespace");
 }
 
 

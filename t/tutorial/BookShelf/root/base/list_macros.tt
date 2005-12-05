@@ -1,7 +1,22 @@
+[% PROCESS "form_macros.tt" %]
 [% MACRO list_row_columns(item) BLOCK; %]
-            [% FOR column = crud.model.list_columns %]
-                <td>[% item.$column %]</td>
-            [% END %]
+            [%
+            FOR column = crud.model.list_columns;
+                list_row_column(item, column);
+            END;
+            %]
+[% END; %]
+
+
+
+[% MACRO list_row_column(item, column) BLOCK; %]
+                <td>
+                [% IF column == crud.model.columns('Stringify'); %]
+                   <a href="[% c.uri_for_controller('view', item.id) %]">[% item.$column | html %]</a>
+                [% ELSE; %]
+                    [% form_field_item(column, item.$column, ['view', item.$column.id], '') %]
+                [% END; %]
+                </td>
 [% END; %]
 
 

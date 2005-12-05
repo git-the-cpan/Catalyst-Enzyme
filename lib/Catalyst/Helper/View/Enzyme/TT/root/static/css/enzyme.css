@@ -122,7 +122,7 @@ label {
   padding-bottom: 1em;
 }
 
-label .field {
+label .input_field {
   float:left;
   width:25%;
   margin-right:0.5em;
@@ -130,6 +130,15 @@ label .field {
   text-align:right;
   font-weight:bold;
 }
+
+label .input_field a {
+  color: #000000;
+}
+
+label .input_field a:hover {
+  color: #336699;/*c2*/
+}
+
 
 label input {
   width: 50%;
@@ -176,6 +185,14 @@ span .item_field {
   padding-bottom:0.2em;
   text-align:right;
   font-weight:bold;
+}
+
+span .item_field a {
+  color: #000000;
+}
+
+span .item_field a:hover {
+  color: #336699;/*c2*/
 }
 
 span .item_data {

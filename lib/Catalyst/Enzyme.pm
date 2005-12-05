@@ -3,7 +3,7 @@ use base 'Catalyst::Base';
 
 
 
-our $VERSION = 0.07;
+our $VERSION = 0.08;
 
 
 
@@ -41,7 +41,10 @@ Catalyst::Enzyme - CRUD framework for Catalyst
 Browse to http://localhost:3000/book and see what it looks like
 without any configuration.
 
-See the L</TUTORIAL> below for a detailed example of the BookDB.
+See the L</DEMO APPLICATION> below for a ready-to-run example of the BookDB.
+
+See the L</TUTORIAL> below for a detailed example of how to create an
+application from the BookDB schema.
 
 
 
@@ -204,13 +207,13 @@ Enzyme will redirect (as opposed to forward) after any data modifying
 action (the do_* actions).
 
 The reason for this is that there shouldn't be any destructive url
-lingering in the Location field in the browser (what happens when the
-user reloads the /book/destroy/34 URL? It fails if course).
+lingering in the Location field in the browser (what happens if the
+user reloads the /book/do_delete/34 URL? It fails if course. Bad).
 
 
 =head2 Forwarding between Controllers
 
-Each Controller has a Model class associated with it (available the
+Each Controller has a Model class associated with it (available in the
 $c->stash->{crud}->{model_class}), along with the rest of the meta
 data you set up in the Model class.
 
@@ -278,10 +281,27 @@ let the VCS help you merge them.
 
 This is of course a slight annoyance, but I'll try to bundle template
 changes into one release instead of many small ones. Template changes
-is bound to happen less frequently over time as the feature-set of the
-framework becomes more stable.
+are bound to happen less frequently over time as the feature-set of
+Catalyst::Enzyme becomes more stable.
 
-Any template change will be noted in the L<Changes> file.
+Any template change will be noted in the C<Changes> file.
+
+
+
+=head1 DEMO APPLICATION
+
+There is a demo application at C<t/tutorial/BookShelf> which you
+should be able to run with
+
+    script\bookshelf_server -d
+
+If the database doesn't work properly, you may need to re-create the
+SQLite database file C<db/bookshelf.db>. See the L</TUTORIAL> for
+instructions on how to do that.
+
+The demo is a CRUD setup (basically the tutorial), with some minor
+enhancments to borrow/return books, to give an example of how to grow
+an application.
 
 
 
@@ -396,8 +416,13 @@ idea of what it provides.
     script\bookshelf_create.pl model BookShelfDB Enzyme::CDBI dbi:SQLite:dbname=db/bookshelf.db
     ... created files ...
 
-This creates the main CDBI class BookShelfDB, and table classes for
-each table in the database.
+This creates the main CDBI class BookShelfDB. At this point it may be
+practical to anchor the database file to the Catalyst home dir:
+
+    dsn => 'dbi:SQLite:dbname=' . file(BookShelf->config->{home}, 'db/bookshelf.db'),
+
+
+The helper also creates table classes for each table in the database.
 
 While they work as it is, Enzyme could use some extra meta data about
 the Model classes.

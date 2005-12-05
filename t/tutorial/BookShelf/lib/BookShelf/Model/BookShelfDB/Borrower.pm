@@ -26,8 +26,8 @@ CDBI Table Class with Enzyme CRUD configuration.
 use Data::FormValidator::Constraints qw(:regexp_common);
 __PACKAGE__->columns(Stringify=> qw/name/);
 
-__PACKAGE__->columns(list_columns=> qw/ email name url /);
-__PACKAGE__->columns(view_columns=> qw/ email name url phone /);
+__PACKAGE__->columns(list_columns=> qw/ name email url /);
+__PACKAGE__->columns(view_columns=> qw/ name email url phone /);
 
 __PACKAGE__->config(
     crud => {

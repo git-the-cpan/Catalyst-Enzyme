@@ -15,6 +15,7 @@ WriteMakefile(
         "Catalyst::Plugin::FormValidator" => 0,
         "Catalyst::View::TT::ControllerLocal" => 0,
         "Catalyst::Helper::Model::CDBI" => 0,
+        "Catalyst::Plugin::DefaultEnd" => 0,
         "Data::FormValidator" => 0,        
         "Class::DBI" => 0.96,
         "Class::DBI::AsForm" => 0,
