@@ -59,7 +59,7 @@ sub do_borrow : Local {
 
             my $item = $self->model_class->retrieve($id) or die("Could not find id ($id)\n");
 
-            if($item->borrower->id &&
+            if($item->borrower && $item->borrower->id &&
                    $item->borrower->id ne "1" &&
                    $item->borrower->id ne $c->form->valid("borrower")
                    ) {

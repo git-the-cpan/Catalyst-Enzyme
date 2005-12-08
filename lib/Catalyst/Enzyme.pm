@@ -3,7 +3,7 @@ use base 'Catalyst::Base';
 
 
 
-our $VERSION = 0.08;
+our $VERSION = 0.09;
 
 
 

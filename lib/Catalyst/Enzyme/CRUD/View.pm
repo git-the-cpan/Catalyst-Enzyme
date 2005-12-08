@@ -32,22 +32,31 @@ This is a mix-in for any (TT) View using the Enzyme CRUD.
 =head2 METHODS
 
 
-=head2 element_req($c, $action_name, $column, [$type = "text"])
+=head2 element_req($c, $action_name, $column, $type)
 
 Return new HTML::Element for $column.
 
 If the current action is $action_name, fill in data from the request.
 
 If there is no $column field in the model class, return a HTML <INPUT
-type="$type"> field with that name.
+type="$type"> field with that name. Type = "textfield" | "textarea" |
+"select"
 
 =cut
 sub element_req {
     my ($self, $c, $action_name, $column, $type) = @_;
-    $type ||= "text";
 
-    my $element = eval { $c->stash->{crud}->{model_class}->to_field($column) } ||
-            HTML::Element->new("input", name => $column, type => $type);
+    my $element = eval { $c->stash->{crud}->{model_class}->to_field($column, $type) };
+    if(!$element) {
+        if($type eq "textarea") {
+            $element = HTML::Element->new("textarea", name => $column);
+        } else {
+            my $html_type = $type;
+            $html_type eq "textfield" and $html_type = "text";
+            $element = HTML::Element->new("input", name => $column, type => $html_type);
+        }
+    }
+            
 
     if($c->action->name eq $action_name) {
         my $value = $c->req->param($column);

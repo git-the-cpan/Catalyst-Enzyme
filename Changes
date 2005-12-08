@@ -1,6 +1,17 @@
 Revision history for Catalyst-Enzyme
 
 
+* 0.09 - 2005-12-08
+
+- Changed templates in this version. Run the View helper to generate
+  new templates which you can merge with your existing ones.
+
+- Bug fix: Template file missing from the MANIFEST
+
+- "Borrow book" extension
+
+
+  
 * 0.08 - 2005-12-05
 
 - Changed templates in this version. Run the View helper to generate

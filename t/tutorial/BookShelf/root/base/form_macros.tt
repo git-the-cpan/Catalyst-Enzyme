@@ -1,8 +1,8 @@
-[% MACRO form_add_column_input(do_action, column, column_moniker)  BLOCK; %]
+[% MACRO form_add_column_input(do_action, column, column_moniker, control_type)  BLOCK; %]
         <label>
 
         [% form_field_item(column, column_moniker, ['list'], 'input_field') %]
-        [% element = c.view("TT").element_req(c, do_action, column); %]
+        [% element = c.view("TT").element_req(c, do_action, column, control_type); %]
         [% element.as_HTML('<>&"\'') %]
 
         [% IF c.form.missing(column); %]
