@@ -38,10 +38,25 @@ sub mk_compclass {
     my $file = $helper->{file};
     $helper->render_file( 'compclass', $file );
 
-    for my $template (qw/ add.tt edit.tt footer.tt form_macros.tt header.tt list.tt list_macros.tt pager.tt pager_macros.tt view.tt /) {
+    for my $template (
+        qw/
+           add.tt
+           edit.tt
+           footer.tt
+           form_macros.tt
+           header.tt
+           list.tt
+           list_macros.tt
+           pager.tt
+           pager_macros.tt
+           view.tt
+           view_macros.tt
+           delete.tt
+           /) {
+        
         $self->cp_local_file($helper, __FILE__, "TT", "root/base/$template");
     }
-
+    
     $self->cp_local_file($helper, __FILE__, "TT", "root/static/css/enzyme.css", "root/static/css/" . lc("$helper->{app}.css"));
 }
 
