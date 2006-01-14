@@ -51,7 +51,7 @@ sub element_req {
         if($type eq "textarea") {
             $element = HTML::Element->new("textarea", name => $column);
         } else {
-            my $html_type = $type;
+            my $html_type = $type || "";
             $html_type eq "textfield" and $html_type = "text";
             $element = HTML::Element->new("input", name => $column, type => $html_type);
         }

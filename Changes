@@ -1,6 +1,19 @@
 Revision history for Catalyst-Enzyme
 
 
+* 0.11 - 2006-01-14
+
+- Bug fix: Add missing Makefile dependencies. Thanks to Pete Sergeant
+  for the update.
+
+
+  
+* 0.10 - 2005-12-12
+
+- Bug fix: View Helper didn't copy all templates.
+
+
+  
 * 0.09 - 2005-12-08
 
 - Changed templates in this version. Run the View helper to generate
